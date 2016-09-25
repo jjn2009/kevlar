@@ -73,7 +73,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			for _, keybytes := range publicKeys {
 				pubKey, errF := btcec.ParsePubKey(keybytes, btcec.S256())
 				if errF != nil {
-					fmt.Printf("Invalid Public Key: %v", keybytes)
+					fmt.Printf("Invalid Public Key: %v\n", keybytes)
 					return nil, fmt.Errorf("Invalid Public Key: %v", keybytes)
 				}
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
@@ -81,7 +81,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			bufferData := newProof.ToBytes()
 			err = stub.PutState("Proof:"+name, bufferData)
 			if err != nil {
-				fmt.Printf("Error Saving Proof to Data %s", err)
+				fmt.Printf("Error Saving Proof to Data %s\n", err)
 				return nil, fmt.Errorf("Error Saving Proof to Data %s", err)
 			}
 		case proofTx.ProofTX_SECP256K1SHA2:
@@ -94,7 +94,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			for _, keybytes := range publicKeys {
 				pubKey, errF := btcec.ParsePubKey(keybytes, btcec.S256())
 				if errF != nil {
-					fmt.Printf("Invalid Public Key: %v", keybytes)
+					fmt.Printf("Invalid Public Key: %v\n", keybytes)
 					return nil, fmt.Errorf("Invalid Public Key: %v", keybytes)
 				}
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
@@ -113,7 +113,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			bufferData := newProof.ToBytes()
 			err = stub.PutState("Proof:"+name, bufferData)
 			if err != nil {
-				fmt.Printf("Error Saving Proof to Data %s", err)
+				fmt.Printf("Error Saving Proof to Data %s\n", err)
 				return nil, fmt.Errorf("Error Saving Proof to Data %s", err)
 			}
 		default:
@@ -196,13 +196,13 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 		proofBytes, err := stub.GetState("Proof:" + argsProof.Name)
 		if err != nil || len(proofBytes) == 0 {
-			fmt.Printf("Could not retrieve:%s", argsProof.Name)
+			fmt.Printf("Could not retrieve:%s\n", argsProof.Name)
 			return nil, fmt.Errorf("Could not retrieve:%s", argsProof.Name)
 		}
 
 		nameCheck, err := stub.GetState("Proof:" + argsProof.Supercede.Name)
 		if len(nameCheck) > 0 {
-			fmt.Printf("Invalid Superceding Name:%s", argsProof.Supercede.Name)
+			fmt.Printf("Invalid Superceding Name:%s\n", argsProof.Supercede.Name)
 			return nil, fmt.Errorf("Invalid Superceding Name:%s", argsProof.Supercede.Name)
 		}
 		secpProof := new(ElementProof.SecP256k1ElementProof)
@@ -217,7 +217,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		publicKeys := argsProof.Supercede.PubKeys
 
 		if int(threshold) > len(publicKeys) {
-			fmt.Printf("Invalid Threshold of %d for %d keys ", threshold, len(publicKeys))
+			fmt.Printf("Invalid Threshold of %d for %d keys\n", threshold, len(publicKeys))
 			return nil, fmt.Errorf("Invalid Threshold of %d for %d keys ", threshold, len(publicKeys))
 		}
 
@@ -231,7 +231,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			for _, keybytes := range publicKeys {
 				pubKey, errF := btcec.ParsePubKey(keybytes, btcec.S256())
 				if errF != nil {
-					fmt.Printf("Invalid Public Key: %v", keybytes)
+					fmt.Printf("Invalid Public Key: %v\n", keybytes)
 					return nil, fmt.Errorf("Invalid Public Key: %v", keybytes)
 				}
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
@@ -247,7 +247,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			for _, keybytes := range publicKeys {
 				pubKey, errF := btcec.ParsePubKey(keybytes, btcec.S256())
 				if errF != nil {
-					fmt.Printf("Invalid Public Key: %v", keybytes)
+					fmt.Printf("Invalid Public Key: %v\n", keybytes)
 					return nil, fmt.Errorf("Invalid Public Key: %v", keybytes)
 				}
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
@@ -256,14 +256,14 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			for _, keybytes := range publicKeys {
 				pubKey, errF := btcec.ParsePubKey(keybytes, btcec.S256())
 				if errF != nil {
-					fmt.Printf("Invalid Public Key: %v", keybytes)
+					fmt.Printf("Invalid Public Key: %v\n", keybytes)
 					return nil, fmt.Errorf("Invalid Public Key: %v", keybytes)
 				}
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
 			}
 			for _, digest := range argsProof.Supercede.Digests {
 				if len(digest) != 32 {
-					fmt.Printf("Invalid Digest Length")
+					fmt.Println("Invalid Digest Length")
 					return nil, fmt.Errorf("Invalid Digest Length")
 				}
 				var fixedDigest [32]byte
@@ -282,7 +282,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		if err == nil {
 			result := secpProof.Supercede(&argsProof.Signatures, digestHex)
 			if result == false {
-				fmt.Printf("Invalid Signatures. Digest: %v", digestHex)
+				fmt.Printf("Invalid Signatures. Digest: %v\n", digestHex)
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpProof.ToBytes()
@@ -294,7 +294,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		if err == nil {
 			result := secpShaProof.Supercede(&argsProof.Signatures, digestHex)
 			if result == false {
-				fmt.Printf("Invalid Signatures. Digest: %v", digestHex)
+				fmt.Printf("Invalid Signatures. Digest: %v\n", digestHex)
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpShaProof.ToBytes()
@@ -303,7 +303,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 		err = stub.PutState("Proof:"+name, bufferData)
 		if err != nil {
-			fmt.Printf("Error Saving Proof to Data %s", err)
+			fmt.Printf("Error Saving Proof to Data %s\n", err)
 			return nil, fmt.Errorf("Error Saving Proof to Data %s", err)
 		}
 
@@ -347,6 +347,6 @@ func (t *docProofsChainCode) Query(stub *shim.ChaincodeStub, function string, ar
 func main() {
 	err := shim.Start(new(docProofsChainCode))
 	if err != nil {
-		fmt.Printf("Error starting chaincode: %s", err)
+		fmt.Printf("Error starting chaincode: %s\n", err)
 	}
 }
