@@ -51,7 +51,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 	switch function {
 
-	case "create":
+	case "createProof":
 		name := argsProof.Name
 		threshold := argsProof.Threshold
 		publicKeys := argsProof.PubKeys
@@ -274,7 +274,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			bufferData = newProof.ToBytes()
 
 		default:
-			fmt.Printf("Invalid Proof Type")
+			fmt.Println("Invalid Proof Type")
 			return nil, errors.New("Invalid Proof Type")
 		}
 
