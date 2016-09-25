@@ -282,7 +282,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		if err == nil {
 			result := secpProof.Supercede(&argsProof.Signatures, digestHex)
 			if result == false {
-				fmt.Printf("Invalid Signatures. Digest: %v\n", digestHex)
+				fmt.Printf("Invalid Signatures. Digest: %s\n", digestHex)
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpProof.ToBytes()
@@ -294,7 +294,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		if err == nil {
 			result := secpShaProof.Supercede(&argsProof.Signatures, digestHex)
 			if result == false {
-				fmt.Printf("Invalid Signatures. Digest: %v\n", digestHex)
+				fmt.Printf("Invalid Signatures. Digest: %s\n", digestHex)
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpShaProof.ToBytes()
