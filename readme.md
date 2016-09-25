@@ -19,7 +19,7 @@ This protocol is blockchain agnostic. This particular implementation is within t
  When any portion of a purchase order is shared with a new party, the system is designed so that the following verifications can easily made against the data
 
   - The data is approved by all of the parties
-  - That the terms are current and have not been superseded by a more recent version
+  - That the terms are current and have not been superceded by a more recent version
   - Privacy of underlying business data.
 
 

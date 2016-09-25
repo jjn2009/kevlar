@@ -27,7 +27,7 @@ type SecP256k1ElementProof struct {
 	State        SigState
 	Signatures   []btcec.Signature
 	PublicKeys   []btcec.PublicKey
-	SupersededBy string
+	SupercededBy string
 	Threshold    int
 	Data         string
 }
@@ -81,16 +81,16 @@ func (b *SecP256k1ElementProof) verifySigs(message string, signatures *[][]byte)
 	}
 	return validSig, validatedSigs
 }
-func (b *SecP256k1ElementProof) Supersede(signatures *[][]byte, supersededBy string) bool {
+func (b *SecP256k1ElementProof) Supercede(signatures *[][]byte, supercededBy string) bool {
 
-	success, sigs := b.verifySigs(b.ProofName+":superseded:"+supersededBy, signatures)
+	success, sigs := b.verifySigs(b.ProofName+":superceded:"+supercededBy, signatures)
 	if !success {
 		return false
 	}
 
 	if b.State == Initialized || b.State == Signed || b.State == Revoked {
-		b.State = Superseded
-		b.SupersededBy = supersededBy
+		b.State = Superceded
+		b.SupercededBy = supercededBy
 		b.Signatures = sigs
 		return true
 	}
@@ -136,7 +136,7 @@ func (b *SecP256k1ElementProof) ToBytes() []byte {
 	store := ProofElementStore.SECPProofElementStore{}
 	store.Name = b.ProofName
 	store.Data = b.Data
-	store.SupersededBy = b.SupersededBy
+	store.SupercededBy = b.SupercededBy
 	store.Threshold = int32(b.Threshold)
 	switch b.State {
 	case Initialized:
@@ -145,8 +145,8 @@ func (b *SecP256k1ElementProof) ToBytes() []byte {
 		store.State = ProofElementStore.SECPProofElementStore_Signed
 	case Revoked:
 		store.State = ProofElementStore.SECPProofElementStore_Revoked
-	case Superseded:
-		store.State = ProofElementStore.SECPProofElementStore_Superseded
+	case Superceded:
+		store.State = ProofElementStore.SECPProofElementStore_Superceded
 	}
 
 	for _, key := range b.PublicKeys {
@@ -178,7 +178,7 @@ func (b *SecP256k1ElementProof) FromBytes(bits []byte) error {
 	store := metastore.Secp
 	b.ProofName = store.Name
 	b.Data = store.Data
-	b.SupersededBy = store.SupersededBy
+	b.SupercededBy = store.SupercededBy
 	b.Threshold = int(store.Threshold)
 	switch store.State {
 	case ProofElementStore.SECPProofElementStore_Initialized:
@@ -187,8 +187,8 @@ func (b *SecP256k1ElementProof) FromBytes(bits []byte) error {
 		b.State = Signed
 	case ProofElementStore.SECPProofElementStore_Revoked:
 		b.State = Revoked
-	case ProofElementStore.SECPProofElementStore_Superseded:
-		b.State = Superseded
+	case ProofElementStore.SECPProofElementStore_Superceded:
+		b.State = Superceded
 	}
 	for _, key := range store.PublicKeys {
 		publicKey, err := btcec.ParsePubKey(key, btcec.S256())
@@ -213,7 +213,7 @@ func (b *SecP256k1ElementProof) ToJSON() []byte {
 		State        string
 		Signatures   []string
 		PublicKeys   []string
-		SupersededBy string
+		SupercededBy string
 		Threshold    int
 		Data         string
 	}
@@ -227,8 +227,8 @@ func (b *SecP256k1ElementProof) ToJSON() []byte {
 		jsonBracket.State = "Signed"
 	case Revoked:
 		jsonBracket.State = "Revoked"
-	case Superseded:
-		jsonBracket.State = "Superseded"
+	case Superceded:
+		jsonBracket.State = "Superceded"
 	}
 	for _, sig := range b.Signatures {
 		jsonBracket.Signatures = append(jsonBracket.Signatures, hex.EncodeToString(sig.Serialize()))
@@ -236,7 +236,7 @@ func (b *SecP256k1ElementProof) ToJSON() []byte {
 	for _, pubKey := range b.PublicKeys {
 		jsonBracket.PublicKeys = append(jsonBracket.PublicKeys, hex.EncodeToString(pubKey.SerializeCompressed()))
 	}
-	jsonBracket.SupersededBy = b.SupersededBy
+	jsonBracket.SupercededBy = b.SupercededBy
 	jsonBracket.Threshold = b.Threshold
 	jsonBracket.Data = b.Data
 

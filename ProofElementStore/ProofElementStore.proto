@@ -24,7 +24,7 @@ message SECPProofElementStore {
     Initialized =0;
     Signed =1;
     Revoked =2;
-    Superseded =3;
+    Superceded =3;
   }
   string name = 1;
   ProofElementState state =2;
@@ -32,7 +32,7 @@ message SECPProofElementStore {
   string data =4;
   repeated bytes PublicKeys =5;
   repeated bytes Signatures =6;
-  string SupersededBy =7;
+  string SupercededBy =7;
 }
 
 message SECPSHA2ProofElementStore {
@@ -40,7 +40,7 @@ message SECPSHA2ProofElementStore {
     Initialized =0;
     Signed =1;
     Revoked =2;
-    Superseded =3;
+    Superceded =3;
   }
   string name = 1;
   ProofElementState state =2;
@@ -50,5 +50,5 @@ message SECPSHA2ProofElementStore {
   repeated bytes Signatures =6;
   repeated bytes Digests =7;
   repeated bytes Preimages =8;
-  string supersededBy =9;
+  string supercededBy =9;
 }

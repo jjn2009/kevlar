@@ -16,5 +16,5 @@ const (
 	Initialized SigState = iota // 0
 	Signed                      // 1
 	Revoked                     // 2
-	Superseded                  // 3
+	Superceded                  // 3
 )

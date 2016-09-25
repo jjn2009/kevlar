@@ -1780,7 +1780,7 @@ func StartOpenchainRESTServer(server *ServerOpenchain, devops *core.Devops) {
 	router.Get("/chain", (*ServerOpenchainREST).GetBlockchainInfo)
 	router.Get("/chain/blocks/:id", (*ServerOpenchainREST).GetBlockByNumber)
 
-	// The /devops endpoint is now considered deprecated and superseded by the /chaincode endpoint
+	// The /devops endpoint is now considered deprecated and superceded by the /chaincode endpoint
 	router.Post("/devops/deploy", (*ServerOpenchainREST).Deploy)
 	router.Post("/devops/invoke", (*ServerOpenchainREST).Invoke)
 	router.Post("/devops/query", (*ServerOpenchainREST).Query)
