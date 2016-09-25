@@ -201,7 +201,8 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 		nameCheck, err := stub.GetState("Proof:" + argsProof.Supercede.Name)
 		if len(nameCheck) > 0 {
-			return nil, fmt.Errorf("Invalid Superseding Name:%s", argsProof.Supercede.Name)
+			fmt.Printf("Invalid Superceding Name:%s", argsProof.Supercede.Name)
+			return nil, fmt.Errorf("Invalid Superceding Name:%s", argsProof.Supercede.Name)
 		}
 		secpProof := new(ElementProof.SecP256k1ElementProof)
 		secpShaProof := new(ElementProof.SecP256k1SHA2ElementProof)
@@ -280,7 +281,6 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			result := secpProof.Supercede(&argsProof.Signatures, digestHex)
 			if result == false {
 				fmt.Printf("Invalid Signatures. Digest: %v", digestHex)
-
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpProof.ToBytes()
@@ -292,7 +292,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		if err == nil {
 			result := secpShaProof.Supercede(&argsProof.Signatures, digestHex)
 			if result == false {
-				fmt.Printf("Invalid Signatures")
+				fmt.Printf("Invalid Signatures. Digest: %v", digestHex)
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpShaProof.ToBytes()
