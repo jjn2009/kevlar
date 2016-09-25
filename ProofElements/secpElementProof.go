@@ -81,7 +81,7 @@ func (b *SecP256k1ElementProof) verifySigs(message string, signatures *[][]byte)
 	}
 	return validSig, validatedSigs
 }
-func (b *SecP256k1ElementProof) Supercede(signatures *[][]byte, supercededBy string) bool {
+func (b *SecP256k1ElementProof) Supercede(signatures *[][]byte, supercededBy string, supercedingName string) bool {
 
 	success, sigs := b.verifySigs(b.ProofName+":superceded:"+supercededBy, signatures)
 	if !success {
@@ -90,7 +90,7 @@ func (b *SecP256k1ElementProof) Supercede(signatures *[][]byte, supercededBy str
 
 	if b.State == Initialized || b.State == Signed || b.State == Revoked {
 		b.State = Superceded
-		b.SupercededBy = supercededBy
+		b.SupercededBy = supercedingName
 		b.Signatures = sigs
 		return true
 	}

@@ -121,12 +121,8 @@ func (b *SecP256k1SHA2ElementProof) FromBytes(bits []byte) error {
 func (b *SecP256k1SHA2ElementProof) Hash(preImages [][]byte) bool {
 	count := 0
 	usedDigests := make([]bool, len(b.Digests))
-	hasher := sha256.New()
 	for _, preImage := range preImages {
-		imageDigestRaw := hasher.Sum(preImage)
-		hasher.Reset()
-		var imageDigest [32]byte
-		copy(imageDigest[:], imageDigestRaw)
+		imageDigest := sha256.Sum256(preImage)
 		for i, digest := range b.Digests {
 			if (digest == imageDigest) && usedDigests[i] == false {
 				usedDigests[i] = true

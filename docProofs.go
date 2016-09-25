@@ -208,9 +208,8 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		secpProof := new(ElementProof.SecP256k1ElementProof)
 		secpShaProof := new(ElementProof.SecP256k1SHA2ElementProof)
 		supercededBits, err := proto.Marshal(argsProof.GetSupercede())
-		supercedeHasher := sha256.New()
-		supercedeDigest := supercedeHasher.Sum(supercededBits)
-		digestHex := hex.EncodeToString(supercedeDigest)
+		supercedeDigest := sha256.Sum256(supercededBits)
+		digestHex := hex.EncodeToString(supercedeDigest[:])
 
 		name := argsProof.Supercede.Name
 		threshold := argsProof.Supercede.Threshold
@@ -280,7 +279,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 		err = secpProof.FromBytes(proofBytes)
 		if err == nil {
-			result := secpProof.Supercede(&argsProof.Signatures, digestHex)
+			result := secpProof.Supercede(&argsProof.Signatures, digestHex, argsProof.Supercede.Name)
 			if result == false {
 				fmt.Printf("Invalid Signatures. Digest: %s\n", digestHex)
 				return nil, errors.New("Invalid Signatures")
@@ -292,7 +291,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 		err = secpShaProof.FromBytes(proofBytes)
 		if err == nil {
-			result := secpShaProof.Supercede(&argsProof.Signatures, digestHex)
+			result := secpShaProof.Supercede(&argsProof.Signatures, digestHex, argsProof.Supercede.Name)
 			if result == false {
 				fmt.Printf("Invalid Signatures. Digest: %s\n", digestHex)
 				return nil, errors.New("Invalid Signatures")
