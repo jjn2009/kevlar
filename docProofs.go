@@ -196,6 +196,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 
 		proofBytes, err := stub.GetState("Proof:" + argsProof.Name)
 		if err != nil || len(proofBytes) == 0 {
+			fmt.Printf("Could not retrieve:%s", argsProof.Name)
 			return nil, fmt.Errorf("Could not retrieve:%s", argsProof.Name)
 		}
 
@@ -273,6 +274,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			bufferData = newProof.ToBytes()
 
 		default:
+			fmt.Printf("Invalid Proof Type")
 			return nil, errors.New("Invalid Proof Type")
 		}
 
