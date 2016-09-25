@@ -209,26 +209,6 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 		supercedeHasher := sha256.New()
 		supercedeDigest := supercedeHasher.Sum(supercededBits)
 		digestHex := hex.EncodeToString(supercedeDigest)
-		err = secpProof.FromBytes(proofBytes)
-		if err == nil {
-			result := secpProof.Supercede(&argsProof.Signatures, digestHex)
-			if result == false {
-				return nil, errors.New("Invalid Signatures")
-			}
-			proofBytes = secpProof.ToBytes()
-
-			stub.PutState("Proof:"+secpProof.Name(), proofBytes)
-		}
-
-		err = secpShaProof.FromBytes(proofBytes)
-		if err == nil {
-			result := secpShaProof.Supercede(&argsProof.Signatures, argsProof.Supercede.Name)
-			if result == false {
-				return nil, errors.New("Invalid Signatures")
-			}
-			proofBytes = secpShaProof.ToBytes()
-			stub.PutState("Proof:"+secpShaProof.Name(), proofBytes)
-		}
 
 		name := argsProof.Supercede.Name
 		threshold := argsProof.Supercede.Threshold
@@ -238,6 +218,8 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			fmt.Printf("Invalid Threshold of %d for %d keys ", threshold, len(publicKeys))
 			return nil, fmt.Errorf("Invalid Threshold of %d for %d keys ", threshold, len(publicKeys))
 		}
+
+		var bufferData []byte
 		switch argsProof.Supercede.Type {
 		case proofTx.SupercededBy_SECP256K1:
 			newProof := new(ElementProof.SecP256k1ElementProof)
@@ -252,12 +234,8 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 				}
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
 			}
-			bufferData := newProof.ToBytes()
-			err = stub.PutState("Proof:"+name, bufferData)
-			if err != nil {
-				fmt.Printf("Error Saving Proof to Data %s", err)
-				return nil, fmt.Errorf("Error Saving Proof to Data %s", err)
-			}
+			bufferData = newProof.ToBytes()
+
 		case proofTx.SupercededBy_SECP256K1SHA2:
 			newProof := ElementProof.SecP256k1SHA2ElementProof{}
 			newProof.ProofName = name
@@ -283,6 +261,7 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 			}
 			for _, digest := range argsProof.Supercede.Digests {
 				if len(digest) != 32 {
+					fmt.Printf("Invalid Digest Length")
 					return nil, fmt.Errorf("Invalid Digest Length")
 				}
 				var fixedDigest [32]byte
@@ -290,14 +269,40 @@ func (t *docProofsChainCode) Invoke(stub *shim.ChaincodeStub, function string, a
 				newProof.Digests = append(newProof.Digests, fixedDigest)
 			}
 
-			bufferData := newProof.ToBytes()
-			err = stub.PutState("Proof:"+name, bufferData)
-			if err != nil {
-				fmt.Printf("Error Saving Proof to Data %s", err)
-				return nil, fmt.Errorf("Error Saving Proof to Data %s", err)
-			}
+			bufferData = newProof.ToBytes()
+
 		default:
 			return nil, errors.New("Invalid Proof Type")
+		}
+
+		err = secpProof.FromBytes(proofBytes)
+		if err == nil {
+			result := secpProof.Supercede(&argsProof.Signatures, digestHex)
+			if result == false {
+				fmt.Printf("Invalid Signatures. Digest: %v", digestHex)
+
+				return nil, errors.New("Invalid Signatures")
+			}
+			proofBytes = secpProof.ToBytes()
+
+			stub.PutState("Proof:"+secpProof.Name(), proofBytes)
+		}
+
+		err = secpShaProof.FromBytes(proofBytes)
+		if err == nil {
+			result := secpShaProof.Supercede(&argsProof.Signatures, digestHex)
+			if result == false {
+				fmt.Printf("Invalid Signatures")
+				return nil, errors.New("Invalid Signatures")
+			}
+			proofBytes = secpShaProof.ToBytes()
+			stub.PutState("Proof:"+secpShaProof.Name(), proofBytes)
+		}
+
+		err = stub.PutState("Proof:"+name, bufferData)
+		if err != nil {
+			fmt.Printf("Error Saving Proof to Data %s", err)
+			return nil, fmt.Errorf("Error Saving Proof to Data %s", err)
 		}
 
 		return nil, nil
