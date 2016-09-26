@@ -19,7 +19,7 @@ import (
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/golang/protobuf/proto"
-	"github.com/skuchain/doc_proofs/ProofElementStore"
+	"github.com/skuchain/kevlar/ProofElementStore"
 )
 
 type SecP256k1ElementProof struct {

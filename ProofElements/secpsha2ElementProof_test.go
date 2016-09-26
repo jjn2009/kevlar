@@ -12,7 +12,7 @@ package ElementProof_test
 import (
 	"testing"
 
-	"github.com/skuchain/doc_proofs/ProofElements"
+	"github.com/skuchain/kevlar/ProofElements"
 )
 
 func TestInitialStateSha2(t *testing.T) {

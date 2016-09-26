@@ -1,4 +1,4 @@
-#Doc Proofs
+#Kevlar
 
 ##Introduction
 Skuchain has developed a protocol for parties to notarize attestations of the state of contracts documents.
