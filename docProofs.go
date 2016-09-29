@@ -128,6 +128,7 @@ func (t *kevlarChainCode) Invoke(stub *shim.ChaincodeStub, function string, args
 	case "signProof":
 		proofBytes, err := stub.GetState("Proof:" + argsProof.Name)
 		if err != nil || len(proofBytes) == 0 {
+			fmt.Printf("Could not retrieve:%s\n", argsProof.Name)
 			return nil, fmt.Errorf("Could not retrieve:%s", argsProof.Name)
 		}
 
@@ -138,6 +139,7 @@ func (t *kevlarChainCode) Invoke(stub *shim.ChaincodeStub, function string, args
 		if err == nil {
 			result := secpProof.Signed(&argsProof.Signatures, argsProof.Data)
 			if result == false {
+				fmt.Println("Invalid Signatures")
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpProof.ToBytes()
@@ -149,10 +151,12 @@ func (t *kevlarChainCode) Invoke(stub *shim.ChaincodeStub, function string, args
 		if err == nil {
 			result := secpShaProof.Signed(&argsProof.Signatures, argsProof.Data)
 			if result == false {
+				fmt.Println("Invalid Signatures")
 				return nil, errors.New("Invalid Signatures")
 			}
 			result = secpShaProof.Hash(argsProof.PreImages)
 			if result == false {
+				fmt.Println("Invalid Preimages")
 				return nil, errors.New("Invalid Preimages")
 			}
 			proofBytes = secpShaProof.ToBytes()
@@ -164,6 +168,7 @@ func (t *kevlarChainCode) Invoke(stub *shim.ChaincodeStub, function string, args
 	case "revokeProof":
 		proofBytes, err := stub.GetState("Proof:" + argsProof.Name)
 		if err != nil || len(proofBytes) == 0 {
+			fmt.Printf("Could not retrieve:%s\n", argsProof.Name)
 			return nil, fmt.Errorf("Could not retrieve:%s", argsProof.Name)
 		}
 
@@ -185,6 +190,7 @@ func (t *kevlarChainCode) Invoke(stub *shim.ChaincodeStub, function string, args
 		if err == nil {
 			result := secpShaProof.Revoked(&argsProof.Signatures)
 			if result == false {
+				fmt.Println("Invalid Signatures")
 				return nil, errors.New("Invalid Signatures")
 			}
 			proofBytes = secpShaProof.ToBytes()
