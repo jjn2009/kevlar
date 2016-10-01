@@ -264,14 +264,6 @@ func (t *kevlarChainCode) Invoke(stub *shim.ChaincodeStub, function string, args
 				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
 			}
 
-			for _, keybytes := range publicKeys {
-				pubKey, errF := btcec.ParsePubKey(keybytes, btcec.S256())
-				if errF != nil {
-					fmt.Printf("Invalid Public Key: %v\n", keybytes)
-					return nil, fmt.Errorf("Invalid Public Key: %v", keybytes)
-				}
-				newProof.PublicKeys = append(newProof.PublicKeys, *pubKey)
-			}
 			for _, digest := range argsProof.Supercede.Digests {
 				if len(digest) != 32 {
 					fmt.Println("Invalid Digest Length")
