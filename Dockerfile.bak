@@ -1,6 +1,6 @@
 from hyperledger/fabric-baseimage
 RUN mkdir -p $GOPATH/src/github.com/skuchain/
-ADD . $GOPATH/src/github.com/skuchain/kevlar
+ADD . $GOPATH/src/github.com/jjn2009/kevlar
 WORKDIR $GOPATH
-RUN go install github.com/skuchain/kevlar
-RUN cp src/github.com/skuchain/kevlar/vendor/github.com/hyperledger/fabric/peer/core.yaml $GOPATH/bin
+RUN go install github.com/jjn2009/kevlar
+RUN cp src/github.com/jjn2009/kevlar/vendor/github.com/hyperledger/fabric/peer/core.yaml $GOPATH/bin

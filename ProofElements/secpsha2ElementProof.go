@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/skuchain/kevlar/ProofElementStore"
+	"github.com/jjn2009/kevlar/ProofElementStore"
 
 	"github.com/btcsuite/btcd/btcec"
 )

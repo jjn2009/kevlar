@@ -18,8 +18,8 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/skuchain/kevlar/ProofElements"
-	"github.com/skuchain/kevlar/ProofTx"
+	"github.com/jjn2009/kevlar/ProofElements"
+	"github.com/jjn2009/kevlar/ProofTx"
 )
 
 // This chaincode implements the ledger operations for the proofchaincode
