@@ -324,7 +324,7 @@ func (t *kevlarChainCode) Query(stub shim.ChaincodeStubInterface, function strin
 	switch function {
 	case "status":
 		if len(args) != 1 {
-			return nil, fmt.Errorf("No argument specified")
+			return nil, fmt.Errorf("No argument specified %+v", args)
 		}
 		name := args[0]
 		proofBytes, err := stub.GetState("Proof:" + name)
